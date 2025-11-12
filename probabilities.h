@@ -8,5 +8,6 @@
 void probs_seed(unsigned int seed);
 bool decide_corridor_entry(int day, float elapsed_sec);
 int decide_corridor_step(int day, float elapsed_sec);
+int decide_transformator_break(int day, float elapsed_sec);
 
 #endif //GAME_1_PROBABILITIES_H

@@ -12,10 +12,22 @@ int is_flash = 0;
 int entered = 0;
 int stepped = 0;
 int num_rem_flash = 3;
+int tranformator_work = 1;
 
 static float timedifference_msec(struct timeval t0, struct timeval t1){
     return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f;
 }
+
+static void fix_transformator(){
+    tranformator_work = 1;
+}
+
+static void recharge_flashlight(){
+    if (tranformator_work){
+        num_rem_flash = 3;
+    }
+}
+
 static void flash(){
     if (num_rem_flash != 0){
         // отображение картинки со светом
@@ -40,9 +52,21 @@ int main(void){
         gettimeofday(&t1, 0);
         float diff = timedifference_msec(t0, t1);
         if (diff >= 500.0f){
+
             gettimeofday(&t0, 0);
-            float elapsed_sec = timedifference_msec(startTime, t1) / 500.0f;
+            float elapsed_sec = (timedifference_msec(startTime, t1) / 500.0f)/2;
+
+            printf("%f\n",elapsed_sec);
             //printf("[t=%.1fs]\n", elapsed_sec/2);
+
+            int tr_br = decide_transformator_break(day, elapsed_sec) ? 1 : 0;
+            if (tr_br){
+                printf("Transformator broke!\n");
+                tranformator_work = 0;
+                fix_transformator();
+                printf("transformator fixed!\n");
+            }
+
 
             if (!v_corridor){ entered = decide_corridor_entry(day, elapsed_sec) ? 1 : 0; } // расчёт прошёл ли
 

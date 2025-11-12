@@ -9,6 +9,14 @@ static float rng01(void){ return (float)rand()/(float)RAND_MAX; }
 
 void probs_seed(unsigned int seed){ srand(seed); }
 
+static float transformator_break_rate_hz(int day, float t){
+    if (day<1) day=1;
+    float base = 0.1f + 0.5f * clampf(t/360.0f, 0.0f, 1.0f);
+    float day_mul = 1.0f + 0.35f * clampf((float)(day-1), 0.0f, 10.0f);
+    float surge = 1.0f + 0.5f * clampf((t-240.0f)/180.0f, 0.0f, 1.0f);
+    return base * day_mul * surge;
+}
+
 static float entry_rate_hz(int day, float t){
     if (day<1) day=1;
     float base = 0.4f + 0.16f * clampf(t/360.0f, 0.0f, 1.0f);
@@ -33,4 +41,7 @@ bool decide_corridor_entry(int day, float elapsed_sec){
 }
 int decide_corridor_step(int day, float elapsed_sec){
     return bernoulli_from_rate(step_rate_hz(day, elapsed_sec), 0.3f) ? 1 : 0;
+}
+int decide_transformator_break(int day, float elapsed_sec){
+    return bernoulli_from_rate(step_rate_hz(day, elapsed_sec), 0.2f) ? 1 : 0;
 }
