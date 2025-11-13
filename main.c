@@ -2,6 +2,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include "probabilities.h"
+#include "gamepad.h"
 
 struct timeval t0, t1, startTime;
 
@@ -44,7 +45,11 @@ static void flash(){
     }
 }
 
+
 int main(void){
+    read();
+
+
     gettimeofday(&startTime, 0);
     gettimeofday(&t0, 0);
     probs_seed((unsigned)time(NULL));
